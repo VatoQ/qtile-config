@@ -60,6 +60,7 @@ elif qtile.core.name == "wayland":
 
 mod = "mod4"
 terminal = "kitty"  # guess_terminal()
+power_menu = "~/.config/qtile/scripts/powermenu"
 # launcher = "wofi --show drun"
 # file_manager = "dolphin"  #  "pcmanfm"  # "nautilus"
 keys = [
@@ -103,6 +104,12 @@ keys = [
         lazy.layout.toggle_split(),
         desc="Toggle between split and unsplit sides of stack",
     ),
+    Key(
+        [mod, "shift"],
+        "q",
+        lazy.spawn(os.path.expanduser(power_menu)),
+        desc="Spawn power menu",
+        ),
     Key([mod], "q", lazy.spawn(terminal), desc="Launch terminal"),
     # Key(["control", "alt"], "t", lazy.spawn(terminal), desc="Launch terminal"),
     # Toggle between different layouts as defined below
@@ -458,6 +465,7 @@ floating_layout = layout.Floating(
         Match(wm_class="pcmanfm"),
         Match(wm_class="gnome-calendar"),
         Match(title="Figure 1"),
+        Match(wm_class="powermenu"),
     ],
     max_border_width=4,
     border_width=4,
