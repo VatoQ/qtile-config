@@ -1,0 +1,16 @@
+import os
+
+WALLPAPERS_PATH = os.path.expanduser("~/Pictures/Wallpapers/")
+
+
+TIMER_MINUTES = 30
+
+BAR_NORMAL = 0
+
+BAR_CHOICE_LEFT = 1
+
+BAR_CHOICE_RIGHT = 2
+
+BAR_CHOICE_LEFT_SLASH = 3
+
+BAR_CHOICE_RIGHT_SLASH = 4
