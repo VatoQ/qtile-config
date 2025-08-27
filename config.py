@@ -33,13 +33,11 @@ from libqtile.lazy import lazy
 from qtile_extras.widget.decorations import GradientDecoration, PowerLineDecoration, RectDecoration
 from libqtile import hook
 from qtile_extras import widget as extrawidgets
-from qtile_extras.layout.decorations import GradientBorder
-from qtile_extras.widget.groupbox2 import GroupBoxRule
 from clock_widget import extended_clock, ExtendedClock
 from libqtile.backend.wayland.inputs import InputConfig
 
 # from qtile_extras.layout.decorations import borders.GradientBorder
-from qtile_extras.layout.decorations.borders import GradientBorder, GradientFrame
+from qtile_extras.layout.decorations.borders import GradientFrame
 import os
 import subprocess
 
@@ -181,22 +179,6 @@ for i in groups:
         ]
     )
 
-gradient_border = GradientBorder(colours=[FOCUS_COLOR, SECONDARY_COLOR],
-                                 radial=False)
-
-def init_layout_theme():
-    return {
-        "margin": 5,
-        # "margin_on_single": 5,
-        "border_width": 4,
-        "border_focus": gradient_border,
-        "border_normal": NORMAL_COLORS,
-        "border_on_single": True,
-        "wrap_clients": True,
-        "lower_right": True,
-        "fair": True,
-        "decorations": [gradient_border],
-    }
 
 
 layout_theme = init_layout_theme()
@@ -238,10 +220,10 @@ decoration_group = get_decoration_group(BAR_NORMAL)
 decorations_left = get_decoration_group(BAR_CHOICE_LEFT)
 decorations_right = get_decoration_group(BAR_CHOICE_RIGHT)
 
+# some widgets look better with slightly other settings:
 workspace_decoration = decorations_left.copy()
 workspace_decoration["padding"] = 6
 workspace_decoration["decorations"][0] = RectDecoration(
-    #colour="#004040",
     use_widget_background=True,
     padding_y=20,
     filled=True,
@@ -253,23 +235,7 @@ wifi_decoration =  decorations_right.copy()
 wifi_decoration["padding"] = 8
 
 
-def set_label(rule, box) -> bool:
-    if box.focused:
-        rule.text = "◉"
-    elif box.occupied:
-        rule.text = "◎"
-    else:
-        rule.text = "○"
 
-    return True
-
-# GroupBoxRule().when(func=set_label)
-groupbox_rules = [
-    GroupBoxRule(text_colour=dim_color(YELLOW, 1.4)).when(screen=GroupBoxRule.SCREEN_THIS),
-    GroupBoxRule(text_colour=dim_color(CYAN, 1.4)).when(occupied=True),
-    GroupBoxRule(text_colour=dim_color(CYAN, 2.7)).when(occupied=False),
-    GroupBoxRule().when(func=set_label)
-]
 
 screens = [
     Screen(
@@ -280,12 +246,11 @@ screens = [
                     **decorations_left
                 ),
                 extrawidgets.GroupBox2(
-                    #fmt="",
                     fontsize=20,
                     highlight_method="block",
                     background=dim_color(GRAY, 4),
                     hide_unused=True,
-                    rules=groupbox_rules,
+                    rules=GROUPBOX_RULES,
                     **workspace_decoration,
                 ),
                 extrawidgets.WindowName(

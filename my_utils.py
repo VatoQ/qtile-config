@@ -6,27 +6,30 @@ from qtile_extras.widget.decorations import (
     PowerLineDecoration,
     RectDecoration
 )
+from qtile_extras.layout.decorations import GradientBorder
+from qtile_extras.widget.groupbox2 import GroupBoxRule
+
+###################
+#### WALLPAPER ####
+###################
 
 WALLPAPERS_PATH = os.path.expanduser("~/Pictures/Wallpapers/")
 
 
 TIMER_MINUTES = 30
 
-BAR_NORMAL = 0
 
-BAR_CHOICE_LEFT = 1
-
-BAR_CHOICE_RIGHT = 2
-
-BAR_CHOICE_LEFT_SLASH = 3
-
-BAR_CHOICE_RIGHT_SLASH = 4
+######################################
+#### COMMON PROGRAMS AND BINDINGS ####
+######################################
 
 mod = "mod4"
 terminal = "kitty"  # guess_terminal()
 power_menu = "~/.config/qtile/scripts/powermenu"
 
-
+#######################
+#### COLOR_SECTION ####
+#######################
 
 YELLOW      = "#FFEE28"
 ORANGE      = "#FFAA28"
@@ -39,7 +42,7 @@ BLUE        = "#2828FF"
 GRAY        = "#ABABAB"
 
 
-def dim_color(color:str, factor:float) -> str:
+def dim_color(color:str, quotient:float) -> str:
     """
     dim a given color hex code by a given factor.
 
@@ -55,21 +58,33 @@ def dim_color(color:str, factor:float) -> str:
 
 
     for i in range(len(color)):
-        color[i] = int(color[i] / factor)
+        color[i] = int(color[i] / quotient)
 
         color_str.append(f"{color[i]:02x}")
 
     return "#" + "".join(color_str)
 
 
-
-
-
 FOCUS_COLOR = ORANGE
 SECONDARY_COLOR = YELLOW
-NORMAL_COLORS = dim_color(FOCUS_COLOR, factor=1.5)
+NORMAL_COLORS = dim_color(FOCUS_COLOR, quotient=1.5)
 POINT1 = (0, 0)
 POINT2 = (0, 1)
+
+
+########################
+#### BAR DECORATION ####
+########################
+
+BAR_NORMAL = 0
+
+BAR_CHOICE_LEFT = 1
+
+BAR_CHOICE_RIGHT = 2
+
+BAR_CHOICE_LEFT_SLASH = 3
+
+BAR_CHOICE_RIGHT_SLASH = 4
 
 def get_decoration_group(choice: int):
     result = {}
@@ -112,5 +127,59 @@ def get_decoration_group(choice: int):
         result["padding"] = 15
 
     return result
+
+
+def set_label(rule, box) -> bool:
+    """
+    Sets labels to group icons in GroupBox2
+
+    :return: True
+    """
+    if box.focused:
+        rule.text = "◉"
+    elif box.occupied:
+        rule.text = "◎"
+    else:
+        rule.text = "○"
+
+    return True
+
+GROUPBOX_RULES = [
+    GroupBoxRule(text_colour=dim_color(YELLOW, 1.4)).when(screen=GroupBoxRule.SCREEN_THIS),
+    GroupBoxRule(text_colour=dim_color(CYAN, 1.4)).when(occupied=True),
+    GroupBoxRule(text_colour=dim_color(CYAN, 2.7)).when(occupied=False),
+    GroupBoxRule().when(func=set_label)
+]
+
+################
+#### LAYOUT ####
+################
+
+_gradient_border = GradientBorder(colours=[FOCUS_COLOR, SECONDARY_COLOR],
+                                 radial=False)
+
+def init_layout_theme():
+    """
+    Returns a dict of arguments for layout config. should be
+    unpacked as kwargs to a layout constructor like this:
+
+    ```
+    layout_theme = init_layout_theme()
+
+    layout.Bsp(**layout_theme)
+    ```
+    """
+    return {
+        "margin": 5,
+        "border_width": 4,
+        "border_focus": _gradient_border,
+        "border_normal": NORMAL_COLORS,
+        "border_on_single": True,
+        "wrap_clients": True,
+        "lower_right": True,
+        "fair": True,
+        "decorations": [_gradient_border],
+    }
+
 
 
