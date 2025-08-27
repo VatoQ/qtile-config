@@ -24,6 +24,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from ast import mod
+from constants import *
 from tkinter import Y
 from libqtile import bar, layout, qtile, widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
@@ -43,6 +45,7 @@ import subprocess
 from settings import TIMER_MINUTES, BAR_CHOICE_LEFT, BAR_CHOICE_RIGHT, BAR_NORMAL
 
 # from random_wallpaper import set_random_wallpaper
+from qtile_graphs import show_graphs
 import random_wallpaper
 
 launcher = ""
@@ -57,16 +60,16 @@ elif qtile.core.name == "wayland":
     launcher = "wofi --show drun"
     file_manager = "dolphin"
 
-
-mod = "mod4"
-terminal = "kitty"  # guess_terminal()
-power_menu = "~/.config/qtile/scripts/powermenu"
+#mod = "mod4"
+#terminal = "kitty"  # guess_terminal()
+#power_menu = "~/.config/qtile/scripts/powermenu"
 # launcher = "wofi --show drun"
 # file_manager = "dolphin"  #  "pcmanfm"  # "nautilus"
 keys = [
     # A list of available commands that can be bound to keys can be found
     # at https://docs.qtile.org/en/latest/manual/config/lazy.html
     # Switch between windows
+    Key([mod, "shift"], "g", lazy.function(show_graphs)),
     Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
     Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
     Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
@@ -179,37 +182,7 @@ for i in groups:
         ]
     )
 
-YELLOW      = "#FFEE28"
-ORANGE      = "#FFAA28"
-MAGENTA     = "#FF28AA"
-RED         = "#F02850"
-LIME        = "#AAFF28"
-LIGHT_GREEN = "#28FFAA"
-CYAN        = "#28AAFF"
-BLUE        = "#2828FF"
-GRAY        = "#ABABAB"
 
-def dim_color(color:str, factor:float) -> str:
-    """
-    dim a given color hex code by a given factor.
-
-    :param color: hexcode of a color. format: `#XXXXXX`
-    :param factor: positive real number, where 1.0 does 
-    nothing and the larger it is, the darker the color gets.
-    """
-    r = int(color[1:3], 16)
-    g = int(color[3:5], 16)
-    b = int(color[5:7], 16)
-    color:list[int] = [r, g, b]
-    color_str:list[str] = []
-
-
-    for i in range(len(color)):
-        color[i] = int(color[i] / factor)
-
-        color_str.append(f"{color[i]:02x}")
-
-    return "#" + "".join(color_str)
 
 
 FOCUS_COLOR = ORANGE
@@ -321,7 +294,7 @@ decorations_left = get_decoration_group(BAR_CHOICE_LEFT)
 
 decorations_right = get_decoration_group(BAR_CHOICE_RIGHT)
 
-workspace_decoration = decorations_left
+workspace_decoration = decorations_left.copy()
 workspace_decoration["padding"] = 6
 workspace_decoration["decorations"][0] = RectDecoration(
     #colour="#004040",
@@ -330,6 +303,13 @@ workspace_decoration["decorations"][0] = RectDecoration(
     filled=True,
     radius=9,
 )
+
+
+wifi_decoration =  decorations_right.copy()
+wifi_decoration["padding"] = 8
+
+
+
 
 #workspace_decoration["decorations"][0] = GradientDecoration(
 #    colours = [YELLOW, ORANGE]
@@ -365,7 +345,7 @@ screens = [
                     #fmt="",
                     fontsize=20,
                     highlight_method="block",
-                    background=dim_color(GRAY, 3.4),
+                    background=dim_color(GRAY, 4),
                     hide_unused=True,
                     rules=groupbox_rules,
                     **workspace_decoration,
@@ -376,12 +356,14 @@ screens = [
                     **decorations_right
                 ),
                 extrawidgets.StatusNotifier(background="#001020", **decorations_right),
-                extrawidgets.Wlan(
-                    background=dim_color(BLUE, 5),
-                    **decorations_right,
+                extrawidgets.WiFiIcon(
+                    background=dim_color(BLUE, 6.8),
+                    #fontsize=10,
+                    interface="wlp2s0",
+                    **wifi_decoration,
                     ),
                 extrawidgets.Systray(
-                    background=dim_color(BLUE, 5),
+                    background=dim_color(BLUE, 6.7),
                     **decorations_right
                     ),
                 extrawidgets.Clock(
@@ -398,7 +380,7 @@ screens = [
                     discharge_char="󰁿",
                     charge_char="󰂄",
                     full_char="󰁹",
-                    low_background="#804000",
+                    low_background=RED,
                     low_percentage=0.2,
                     charge_controller=lambda: (0, 95),
                     **decorations_right,
