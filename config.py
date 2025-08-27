@@ -25,7 +25,7 @@
 # SOFTWARE.
 
 from ast import mod
-from constants import *
+from my_utils import *
 from tkinter import Y
 from libqtile import bar, layout, qtile, widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
@@ -42,7 +42,6 @@ from libqtile.backend.wayland.inputs import InputConfig
 from qtile_extras.layout.decorations.borders import GradientBorder, GradientFrame
 import os
 import subprocess
-from settings import TIMER_MINUTES, BAR_CHOICE_LEFT, BAR_CHOICE_RIGHT, BAR_NORMAL
 
 # from random_wallpaper import set_random_wallpaper
 from qtile_graphs import show_graphs
@@ -185,7 +184,6 @@ for i in groups:
 gradient_border = GradientBorder(colours=[FOCUS_COLOR, SECONDARY_COLOR],
                                  radial=False)
 
-
 def init_layout_theme():
     return {
         "margin": 5,
@@ -236,53 +234,8 @@ widget_defaults = dict(
 extension_defaults = widget_defaults.copy()
 
 
-def get_decoration_group(choice: int) -> dict:
-    result = {}
-
-    if choice == BAR_NORMAL:
-        result["decorations"] = [
-            RectDecoration(
-                colour="#004040", radius=2, filled=True, padding=0, group=True
-            )
-        ]
-
-        result["padding"] = 20
-
-    elif choice == BAR_CHOICE_LEFT:
-        result["decorations"] = [
-            RectDecoration(
-                # colour="#004040",
-                use_widget_background=True,
-                padding_y=5,
-                filled=True,
-                radius=3,
-            ),
-            PowerLineDecoration(path="rounded_left", padding_y=0),
-        ]
-
-        result["padding"] = 15
-        # result["height"] = 30
-
-    elif choice == BAR_CHOICE_RIGHT:
-        result["decorations"] = [
-            RectDecoration(
-                # colour="#004040",
-                use_widget_background=True,
-                padding_y=5,
-                filled=True,
-                radius=3,
-            ),
-            PowerLineDecoration(path="rounded_right", padding_y=0),
-        ]
-        result["padding"] = 15
-
-    return result
-
-
 decoration_group = get_decoration_group(BAR_NORMAL)
-
 decorations_left = get_decoration_group(BAR_CHOICE_LEFT)
-
 decorations_right = get_decoration_group(BAR_CHOICE_RIGHT)
 
 workspace_decoration = decorations_left.copy()
@@ -299,12 +252,6 @@ workspace_decoration["decorations"][0] = RectDecoration(
 wifi_decoration =  decorations_right.copy()
 wifi_decoration["padding"] = 8
 
-
-
-
-#workspace_decoration["decorations"][0] = GradientDecoration(
-#    colours = [YELLOW, ORANGE]
-#)
 
 def set_label(rule, box) -> bool:
     if box.focused:
@@ -423,7 +370,7 @@ mouse = [
 ]
 
 dgroups_key_binder = None
-dgroups_app_rules = []  # type: list
+dgroups_app_rules = []
 follow_mouse_focus = True
 bring_front_click = False
 floats_kept_above = True
