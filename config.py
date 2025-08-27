@@ -182,15 +182,6 @@ for i in groups:
         ]
     )
 
-
-
-
-FOCUS_COLOR = ORANGE
-SECONDARY_COLOR = ORANGE
-NORMAL_COLORS = dim_color(FOCUS_COLOR, factor=1.5)
-POINT1 = (0, 0)
-POINT2 = (0, 1)
-
 gradient_border = GradientBorder(colours=[FOCUS_COLOR, SECONDARY_COLOR],
                                  radial=False)
 
@@ -371,6 +362,9 @@ screens = [
                     # font="mono",
                     fontsize=11,
                     format="%a %d.%m.%y\n %H:%M:%S %p",
+                    #mouse_callbacks = {
+                    #    "Button1": extended_clock
+                    #    },
                     **decorations_right,
                 ),
                 extrawidgets.Battery(
@@ -397,7 +391,7 @@ screens = [
                     countdown_start=5,
                     **decorations_right,
                 ),
-                # extended_clock,
+                extended_clock,
             ],
             35,
             # radius=10,
