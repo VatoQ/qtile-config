@@ -100,7 +100,7 @@ def show_graphs(qtile):
             width = 1000,
             height = 500,
             controls=controls,
-            background="00000060",
+            background="00000000",
             initial_focus=None,
             close_on_click=True,
             decorations=[
