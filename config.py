@@ -27,7 +27,7 @@
 from ast import mod
 from my_utils import *
 from tkinter import Y
-from libqtile import bar, layout, qtile, widget
+from libqtile import bar, layout, qtile
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from qtile_extras.widget.decorations import GradientDecoration, PowerLineDecoration, RectDecoration
@@ -101,11 +101,17 @@ keys = [
         lazy.spawn(os.path.expanduser(POWER_MENU)),
         desc="Spawn power menu",
         ),
-    Key([MOD], "q", lazy.spawn(TERMINAL), desc="Launch terminal"),
+    Key([MOD], "q",
+        lazy.spawn(TERMINAL),
+        desc="Launch terminal"),
     # Key(["control", "alt"], "t", lazy.spawn(terminal), desc="Launch terminal"),
     # Toggle between different layouts as defined below
-    Key([MOD], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
-    Key([MOD], "c", lazy.window.kill(), desc="Kill focused window"),
+    Key([MOD], "Tab",
+        lazy.next_layout(),
+        desc="Toggle between layouts"),
+    Key([MOD], "c",
+        lazy.window.kill(),
+        desc="Kill focused window"),
     Key(
         [MOD],
         "f",
@@ -118,16 +124,44 @@ keys = [
         lazy.window.toggle_floating(),
         desc="Toggle floating on the focused window",
     ),
-    Key([MOD, "control"], "r", lazy.reload_config(), desc="Reload the config"),
-    Key([MOD, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
-    Key([MOD], "r", lazy.spawn(launcher), desc="Spawn a command using a prompt widget"),
-    Key([MOD], "e", lazy.spawn(file_manager), desc="Spawn file manager"),
+    Key([MOD, "control"], "r",
+        lazy.reload_config(),
+        desc="Reload the config"),
+    Key([MOD, "control"], "q",
+        lazy.shutdown(),
+        desc="Shutdown Qtile"),
+    Key([MOD], "r",
+        lazy.spawn(launcher),
+        desc="Spawn a command using a prompt widget"),
+    Key([MOD], "e",
+        lazy.spawn(file_manager),
+        desc="Spawn file manager"),
     # Switching workspaces
-    Key([MOD], "right", lazy.screen.next_group(skip_empty=True)),
-    Key([MOD], "left", lazy.screen.prev_group(skip_empty=True)),
-    Key([MOD, SHIFT], "right", lazy.screen.next_group(skip_empty=False)),
+    Key([MOD], "right",
+        lazy.screen.next_group(skip_empty=True)),
+    Key([MOD], "left",
+        lazy.screen.prev_group(skip_empty=True)),
+    Key([MOD, SHIFT], "right",
+        lazy.screen.next_group(skip_empty=False)),
     # Key([mod], "up", lazy.layout.focus_next()),
     # Key([mod], "down", lazy.layout.focus_previous()),
+    Key([], "XF86AudioRaiseVolume",
+        lazy.widget["volume"].increase_vol(),
+        desc="Increase Volume"),
+    Key([], "XF86AudioLowerVolume",
+        lazy.widget["volume"].decrease_vol(),
+        desc="Decrease Volume"),
+    Key([], "XF86AudioMute",
+        lazy.widget["volume"].mute(),
+        desc="Toggle Mute"),
+    Key([], "XF86MonBrightnessUp",
+        lazy.widget["brightness"].brightness_up(),
+        desc="Brightness Up"),
+    Key([], "XF86MonBrightnessDown",
+        lazy.widget["brightness"].brightness_down(),
+        desc="Brightness Down"),
+    Key([CONTROL], "l",
+        lazy.spawn(os.path.expanduser(LOCK_SCREEN)))
 ]
 
 # Add key bindings to switch VTs in Wayland.
@@ -231,7 +265,7 @@ screens = [
         top=bar.Bar(
             [
                 extrawidgets.CurrentLayoutIcon(
-                    background=dim_color(BLUE, 1.5), 
+                    background=dim_color(BLUE, 1.8), 
                     **decorations_left
                 ),
                 extrawidgets.GroupBox2(
@@ -243,7 +277,6 @@ screens = [
                     **workspace_decoration,
                 ),
                 extrawidgets.WindowName(
-                    seperator="/",
                     background=dim_color(GRAY, 2),
                     **decorations_right
                 ),
@@ -251,7 +284,13 @@ screens = [
                 extrawidgets.WiFiIcon(
                     background=dim_color(BLUE, 6.8),
                     interface="wlp2s0",
+                    wifi_arc=75,
                     **wifi_decoration,
+                    ),
+                extrawidgets.Bluetooth(
+                    background=dim_color(BLUE, 6.8),
+                    default_text="󰂯 {connected_devices}",
+                    **decorations_right
                     ),
                 extrawidgets.Systray(
                     background=dim_color(BLUE, 6.7),
@@ -259,12 +298,8 @@ screens = [
                     ),
                 extrawidgets.Clock(
                     background=dim_color(BLUE, 4),
-                    # font="mono",
                     fontsize=11,
                     format="%a %d.%m.%y\n %H:%M:%S %p",
-                    #mouse_callbacks = {
-                    #    "Button1": extended_clock
-                    #    },
                     **decorations_right,
                 ),
                 extrawidgets.Battery(
@@ -277,9 +312,29 @@ screens = [
                     low_background=RED,
                     low_percentage=0.2,
                     charge_controller=lambda: (0, 95),
+                    update_interval= 4,
                     **decorations_right,
                 ),
+                extrawidgets.BrightnessControl(
+                    name="brightness",
+                    background=dim_color(CYAN, 2),
+                    bar_colour=dim_color(CYAN, 3),
+                    bar_height=25,
+                    min_brightness=35,
+                    device="/sys/class/backlight/amdgpu_bl1",
+                    format="{percent:2.0%}",
+                    step=5,
+                    **decorations_right
+                ),
                 extrawidgets.PulseVolume(
+                    name="volume",
+                    volume_app = "pavucontrol",
+                    emoji_list= [
+                        "",
+                        "",
+                        "",
+                        "",
+                        ],
                     background=dim_color(CYAN, 1.5), 
                     emoji=True, 
                     **decorations_right
@@ -413,9 +468,9 @@ def autostart():
         subprocess.call(home)
 
 
-#@hook.subscribe.startup_once
-#def start_random_wallpaper_timer():
-#    random_wallpaper.Timer(TIMER_MINUTES * 60, random_wallpaper.set_random_wallpaper)
+# @hook.subscribe.startup_once
+# def start_random_wallpaper_timer():
+#     random_wallpaper.Timer(TIMER_MINUTES * 60, random_wallpaper.set_random_wallpaper)
 
 
 # XXX: Gasp! We're lying here. In fact, nobody really uses or cares about this
