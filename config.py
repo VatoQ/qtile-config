@@ -35,13 +35,9 @@ from libqtile import hook
 from qtile_extras import widget as extrawidgets
 from clock_widget import extended_clock, ExtendedClock
 from libqtile.backend.wayland.inputs import InputConfig
-
-# from qtile_extras.layout.decorations import borders.GradientBorder
 from qtile_extras.layout.decorations.borders import GradientFrame
 import os
 import subprocess
-
-# from random_wallpaper import set_random_wallpaper
 from qtile_graphs import show_graphs
 import random_wallpaper
 
@@ -57,84 +53,79 @@ elif qtile.core.name == "wayland":
     launcher = "wofi --show drun"
     file_manager = "dolphin"
 
-#mod = "mod4"
-#terminal = "kitty"  # guess_terminal()
-#power_menu = "~/.config/qtile/scripts/powermenu"
-# launcher = "wofi --show drun"
-# file_manager = "dolphin"  #  "pcmanfm"  # "nautilus"
 keys = [
     # A list of available commands that can be bound to keys can be found
     # at https://docs.qtile.org/en/latest/manual/config/lazy.html
     # Switch between windows
-    Key([mod, "shift"], "g", lazy.function(show_graphs)),
-    Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
-    Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
-    Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
-    Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
-    Key([mod], "space", lazy.layout.next(), desc="Move window focus to other window"),
+    Key([MOD, SHIFT], "g", lazy.function(show_graphs)),
+    Key([MOD], "h", lazy.layout.left(), desc="Move focus to left"),
+    Key([MOD], "l", lazy.layout.right(), desc="Move focus to right"),
+    Key([MOD], "j", lazy.layout.down(), desc="Move focus down"),
+    Key([MOD], "k", lazy.layout.up(), desc="Move focus up"),
+    Key([MOD], "space", lazy.layout.next(), desc="Move window focus to other window"),
     # Move windows between left/right columns or move up/down in current stack.
     # Moving out of range in Columns layout will create new column.
     Key(
-        [mod, "shift"], "h", lazy.layout.shuffle_left(), desc="Move window to the left"
+        [MOD, SHIFT], "h", lazy.layout.shuffle_left(), desc="Move window to the left"
     ),
     Key(
-        [mod, "shift"],
+        [MOD, SHIFT],
         "l",
         lazy.layout.shuffle_right(),
         desc="Move window to the right",
     ),
-    Key([mod, "shift"], "j", lazy.layout.shuffle_down(), desc="Move window down"),
-    Key([mod, "shift"], "k", lazy.layout.shuffle_up(), desc="Move window up"),
+    Key([MOD, SHIFT], "j", lazy.layout.shuffle_down(), desc="Move window down"),
+    Key([MOD, SHIFT], "k", lazy.layout.shuffle_up(), desc="Move window up"),
     # Grow windows. If current window is on the edge of screen and direction
     # will be to screen edge - window would shrink.
-    Key([mod, "control"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
+    Key([MOD, "control"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
     Key(
-        [mod, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"
+        [MOD, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"
     ),
-    Key([mod, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
-    Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
-    Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
+    Key([MOD, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
+    Key([MOD, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
+    Key([MOD], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
     # Toggle between split and unsplit sides of stack.
     # Split = all windows displayed
     # Unsplit = 1 window displayed, like Max layout, but still with
     # multiple stack panes
     Key(
-        [mod, "shift"],
+        [MOD, SHIFT],
         "Return",
         lazy.layout.toggle_split(),
         desc="Toggle between split and unsplit sides of stack",
     ),
     Key(
-        [mod, "shift"],
+        [MOD, SHIFT],
         "q",
-        lazy.spawn(os.path.expanduser(power_menu)),
+        lazy.spawn(os.path.expanduser(POWER_MENU)),
         desc="Spawn power menu",
         ),
-    Key([mod], "q", lazy.spawn(terminal), desc="Launch terminal"),
+    Key([MOD], "q", lazy.spawn(TERMINAL), desc="Launch terminal"),
     # Key(["control", "alt"], "t", lazy.spawn(terminal), desc="Launch terminal"),
     # Toggle between different layouts as defined below
-    Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
-    Key([mod], "c", lazy.window.kill(), desc="Kill focused window"),
+    Key([MOD], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
+    Key([MOD], "c", lazy.window.kill(), desc="Kill focused window"),
     Key(
-        [mod],
+        [MOD],
         "f",
         lazy.window.toggle_fullscreen(),
         desc="Toggle fullscreen on the focused window",
     ),
     Key(
-        [mod],
+        [MOD],
         "t",
         lazy.window.toggle_floating(),
         desc="Toggle floating on the focused window",
     ),
-    Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
-    Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
-    Key([mod], "r", lazy.spawn(launcher), desc="Spawn a command using a prompt widget"),
-    Key([mod], "e", lazy.spawn(file_manager), desc="Spawn file manager"),
+    Key([MOD, "control"], "r", lazy.reload_config(), desc="Reload the config"),
+    Key([MOD, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
+    Key([MOD], "r", lazy.spawn(launcher), desc="Spawn a command using a prompt widget"),
+    Key([MOD], "e", lazy.spawn(file_manager), desc="Spawn file manager"),
     # Switching workspaces
-    Key([mod], "right", lazy.screen.next_group(skip_empty=True)),
-    Key([mod], "left", lazy.screen.prev_group(skip_empty=True)),
-    Key([mod, "shift"], "right", lazy.screen.next_group(skip_empty=False)),
+    Key([MOD], "right", lazy.screen.next_group(skip_empty=True)),
+    Key([MOD], "left", lazy.screen.prev_group(skip_empty=True)),
+    Key([MOD, SHIFT], "right", lazy.screen.next_group(skip_empty=False)),
     # Key([mod], "up", lazy.layout.focus_next()),
     # Key([mod], "down", lazy.layout.focus_previous()),
 ]
@@ -160,21 +151,21 @@ for i in groups:
         [
             # mod + group number = switch to group
             Key(
-                [mod],
+                [MOD],
                 i.name,
                 lazy.group[i.name].toscreen(),
                 desc=f"Switch to group {i.name}",
             ),
             # mod + shift + group number = switch to & move focused window to group
             Key(
-                [mod, "shift"],
+                [MOD, SHIFT],
                 i.name,
                 lazy.window.togroup(i.name, switch_group=True),
                 desc=f"Switch to & move focused window to group {i.name}",
             ),
             # Or, use below if you prefer not to switch to that group.
             # # mod + shift + group number = move focused window to group
-            # Key([mod, "shift"], i.name, lazy.window.togroup(i.name),
+            # Key([mod, SHIFT], i.name, lazy.window.togroup(i.name),
             #     desc="move focused window to group {}".format(i.name)),
         ]
     )
@@ -235,8 +226,6 @@ wifi_decoration =  decorations_right.copy()
 wifi_decoration["padding"] = 8
 
 
-
-
 screens = [
     Screen(
         top=bar.Bar(
@@ -261,7 +250,6 @@ screens = [
                 extrawidgets.StatusNotifier(background="#001020", **decorations_right),
                 extrawidgets.WiFiIcon(
                     background=dim_color(BLUE, 6.8),
-                    #fontsize=10,
                     interface="wlp2s0",
                     **wifi_decoration,
                     ),
@@ -315,7 +303,8 @@ screens = [
         # This variable is set to None (no cap) by default, but you can set it to 60 to indicate that you limit it to 60 events per second
         # x11_drag_polling_rate = 60,
         # Set Wallpaper
-        # wallpaper="~/Pictures/Wallpapers/colorful.png",
+        wallpaper="~/Pictures/Wallpapers/1343823.png",
+        wallpaper_mode = "fill",
     ),
 ]
 
@@ -323,15 +312,15 @@ screens = [
 mouse = [
     Drag(
         # [mod],
-        [mod],
+        [MOD],
         "Button1",
         lazy.window.set_position_floating(),
         start=lazy.window.get_position(),
     ),
     Drag(
-        [mod], "Button3", lazy.window.set_size_floating(), start=lazy.window.get_size()
+        [MOD], "Button3", lazy.window.set_size_floating(), start=lazy.window.get_size()
     ),
-    Click([mod], "Button2", lazy.window.bring_to_front()),
+    Click([MOD], "Button2", lazy.window.bring_to_front()),
 ]
 
 dgroups_key_binder = None
@@ -424,9 +413,9 @@ def autostart():
         subprocess.call(home)
 
 
-@hook.subscribe.startup_once
-def start_random_wallpaper_timer():
-    random_wallpaper.Timer(TIMER_MINUTES * 60, random_wallpaper.set_random_wallpaper)
+#@hook.subscribe.startup_once
+#def start_random_wallpaper_timer():
+#    random_wallpaper.Timer(TIMER_MINUTES * 60, random_wallpaper.set_random_wallpaper)
 
 
 # XXX: Gasp! We're lying here. In fact, nobody really uses or cares about this
