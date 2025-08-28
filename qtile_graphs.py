@@ -7,11 +7,17 @@ from qtile_extras.popup import (
 from qtile_extras.widget.decorations import (
         RectDecoration
 )
-from constants import (
-        FOCUS_COLOR,
+from my_utils import (
         SECONDARY_COLOR,
+        FOCUS_COLOR,
         dim_color
 )
+
+#from constants import (
+#        FOCUS_COLOR,
+#        SECONDARY_COLOR,
+#        dim_color
+#)
 
 
 def show_graphs(qtile):

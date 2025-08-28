@@ -2,13 +2,15 @@ import os
 import random
 from libqtile import qtile
 from typing import Callable
-from settings import WALLPAPERS_PATH
+#from settings import WALLPAPERS_PATH
+from my_utils import WALLPAPERS_PATH
 
 
 class Timer:
-    def __init__(self, timeout: int, callback: Callable) -> None:
+    def __init__(self, timeout: int, callback: Callable[[], None]) -> None:
         self.callback = callback
         self.timeout = timeout
+        self.timer = None
         self.call()
 
     def call(self):
