@@ -74,17 +74,31 @@ keys = [
         lazy.layout.shuffle_right(),
         desc="Move window to the right",
     ),
-    Key([MOD, SHIFT], "j", lazy.layout.shuffle_down(), desc="Move window down"),
-    Key([MOD, SHIFT], "k", lazy.layout.shuffle_up(), desc="Move window up"),
+    Key([MOD, SHIFT], "j",
+        lazy.layout.shuffle_down(),
+        desc="Move window down"),
+    Key([MOD, SHIFT], "k",
+        lazy.layout.shuffle_up(),
+        desc="Move window up"),
     # Grow windows. If current window is on the edge of screen and direction
     # will be to screen edge - window would shrink.
-    Key([MOD, "control"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
+    Key([MOD, "control"], "h",
+        lazy.layout.grow_left(),
+        desc="Grow window to the left"),
     Key(
-        [MOD, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"
+        [MOD, "control"], "l",
+        lazy.layout.grow_right(),
+        desc="Grow window to the right"
     ),
-    Key([MOD, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
-    Key([MOD, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
-    Key([MOD], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
+    Key([MOD, "control"], "j",
+        lazy.layout.grow_down(),
+        desc="Grow window down"),
+    Key([MOD, "control"], "k",
+        lazy.layout.grow_up(),
+        desc="Grow window up"),
+    Key([MOD], "n",
+        lazy.layout.normalize(),
+        desc="Reset all window sizes"),
     # Toggle between split and unsplit sides of stack.
     # Split = all windows displayed
     # Unsplit = 1 window displayed, like Max layout, but still with
@@ -160,7 +174,7 @@ keys = [
     Key([], "XF86MonBrightnessDown",
         lazy.widget["brightness"].brightness_down(),
         desc="Brightness Down"),
-    Key([CONTROL], "l",
+    Key([CONTROL, SHIFT], "l",
         lazy.spawn(os.path.expanduser(LOCK_SCREEN)))
 ]
 
@@ -265,45 +279,45 @@ screens = [
         top=bar.Bar(
             [
                 extrawidgets.CurrentLayoutIcon(
-                    background=dim_color(BLUE, 1.8), 
+                    background=dim_color(BLUE, DARKER), 
                     **decorations_left
                 ),
                 extrawidgets.GroupBox2(
                     fontsize=20,
                     highlight_method="block",
-                    background=dim_color(GRAY, 4),
+                    background=dim_color(GRAY, DARK),
                     hide_unused=True,
                     rules=GROUPBOX_RULES,
                     **workspace_decoration,
                 ),
                 extrawidgets.WindowName(
-                    background=dim_color(GRAY, 2),
+                    background=dim_color(GRAY, MEDIUM2),
                     **decorations_right
                 ),
-                extrawidgets.StatusNotifier(background="#001020", **decorations_right),
+                # extrawidgets.StatusNotifier(background="#001020", **decorations_right),
                 extrawidgets.WiFiIcon(
-                    background=dim_color(BLUE, 6.8),
+                    background=dim_color(BLUE, DARK2),
                     interface="wlp2s0",
                     wifi_arc=75,
                     **wifi_decoration,
                     ),
                 extrawidgets.Bluetooth(
-                    background=dim_color(BLUE, 6.8),
+                    background=dim_color(BLUE, DARK2),
                     default_text="󰂯 {connected_devices}",
                     **decorations_right
                     ),
                 extrawidgets.Systray(
-                    background=dim_color(BLUE, 6.7),
+                    background=dim_color(BLUE, DARK2),
                     **decorations_right
                     ),
                 extrawidgets.Clock(
-                    background=dim_color(BLUE, 4),
+                    background=dim_color(BLUE, DARK),
                     fontsize=11,
                     format="%a %d.%m.%y\n %H:%M:%S %p",
                     **decorations_right,
                 ),
                 extrawidgets.Battery(
-                    background=dim_color(BLUE, 2.5),
+                    background=dim_color(BLUE, DARKER),
                     format="{char} {percent:2.0%}",
                     empty_char="󰁺",
                     discharge_char="󰁿",
@@ -317,8 +331,8 @@ screens = [
                 ),
                 extrawidgets.BrightnessControl(
                     name="brightness",
-                    background=dim_color(CYAN, 2),
-                    bar_colour=dim_color(CYAN, 3),
+                    background=dim_color(CYAN, MEDIUM2),
+                    bar_colour=dim_color(CYAN, DARKER2),
                     bar_height=25,
                     min_brightness=35,
                     device="/sys/class/backlight/amdgpu_bl1",
@@ -329,24 +343,24 @@ screens = [
                 extrawidgets.PulseVolume(
                     name="volume",
                     volume_app = "pavucontrol",
-                    emoji_list= [
+                    emoji_list = [
                         "",
                         "",
                         "",
                         "",
                         ],
-                    background=dim_color(CYAN, 1.5), 
+                    background = dim_color(CYAN, DIMMED2), 
                     emoji=True, 
                     **decorations_right
                 ),
                 extrawidgets.ScriptExit(
-                    background=dim_color(ORANGE, 1),
+                    background=dim_color(RED, NEUTRAL),
                     default_text="󰅙",  # "",
                     countdown_format="{}",
                     countdown_start=5,
                     **decorations_right,
                 ),
-                extended_clock,
+                # extended_clock,
             ],
             35,
             # radius=10,
