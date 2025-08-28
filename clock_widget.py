@@ -5,6 +5,7 @@ from libqtile import widget
 from qtile_extras import widget as extrawidgets
 from qtile_extras.popup import PopupRelativeLayout, PopupText, PopupWidget
 from qtile_extras.widget.mixins import ExtendedPopupMixin
+from my_utils import CYAN, GRAY, BLUE, dim_color
 
 
 class ExtendedClock(widget.Clock, ExtendedPopupMixin):
@@ -30,6 +31,10 @@ clock_layout = PopupRelativeLayout(
             width=0.8,
             height=0.05,
             h_align="center",
+            #foreground_highlighted="#AAAAFF",
+            #foreground="#AAAAFF"
+            background=dim_color(GRAY, 5),
+            markup=True,
         ),
         PopupWidget(
             widget=extrawidgets.AnalogueClock(
@@ -37,8 +42,14 @@ clock_layout = PopupRelativeLayout(
                 minute_size=4,
                 hour_size=6,
                 face_shape="circle",
-                face_background="222222",
+                face_background=dim_color(GRAY, 5),
                 face_border_width=4,
+                face_border_colour = dim_color(BLUE, 0.8),
+                hour_colour = dim_color(GRAY, 0.77),
+                minute_colour = dim_color(GRAY, 0.77),
+                second_colour = dim_color(GRAY, 0.77),
+                second_length = 0.75,
+                minute_length = 0.9
             ),
             pos_x=0.05,
             pos_y=0.1,
