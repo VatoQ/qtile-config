@@ -54,6 +54,39 @@ LIME =          "#AAFF28"
 GRAY =          "#A2A29A"
 
 
+_A = 0.0244048
+_B = -0.219048
+_C = 0.694643
+_D = 0.5
+
+def _interpolating_polynomial(x:float) -> float:
+    return _A * x ** 3 + _B * x ** 2 + _C * x + _D
+
+# quotients = [
+#         0.5,    # LIGHT
+#         1,      # NEUTRAL
+#         1.3,    # DIMMED
+#         1.5,    # DIMMED2
+#         1.8,    # MEDIUM
+#         2,      # MEDIUM2
+#         2.5,    # DARKER
+#         3,      # DARKER2
+#         4,      # DARK
+#         6.8     # DARK2
+#         ]
+
+LIGHT       = _interpolating_polynomial(0)
+NEUTRAL     = _interpolating_polynomial(1)
+DIMMED      = _interpolating_polynomial(2)
+DIMMED2     = _interpolating_polynomial(3)
+MEDIUM      = _interpolating_polynomial(4)
+MEDIUM2     = _interpolating_polynomial(5)
+DARKER      = _interpolating_polynomial(6)
+DARKER2     = _interpolating_polynomial(7)
+DARK        = _interpolating_polynomial(8)
+DARK2       = _interpolating_polynomial(9)
+
+
 
 def dim_color(color:str, quotient:float) -> str:
     """
@@ -62,6 +95,7 @@ def dim_color(color:str, quotient:float) -> str:
     :param color: hexcode of a color. format: `#XXXXXX`
     :param factor: positive real number, where 1.0 does 
     nothing and the larger it is, the darker the color gets.
+    :return: the dimmed color in the format `#XXXXXX`
     """
     r = int(color[1:3], 16)
     g = int(color[3:5], 16)
@@ -77,6 +111,18 @@ def dim_color(color:str, quotient:float) -> str:
 
     return "#" + "".join(color_str)
 
+def dim_color_alpha(color:str, quotient:float, alpha:str) -> str:
+    """
+    Dims a given color by a given quotient. The larger the quotient, the
+    darker the color.
+
+    :param color: hexcode of a color. format: `#XXXXXX`
+    :param quotient: positive real number, where 1.0 does 
+    nothing and the larger it is, the darker the color gets.
+    :param alpha: alpha channel. Format: `XX` (hexadecimal)
+    :return: the dimmed color in the format `#XXXXXXXX`
+    """
+    return dim_color(color, quotient) + alpha
 
 FOCUS_COLOR = ORANGE
 SECONDARY_COLOR = YELLOW
