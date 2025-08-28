@@ -10,6 +10,7 @@ from qtile_extras.widget.decorations import (
 from my_utils import (
         SECONDARY_COLOR,
         FOCUS_COLOR,
+        GRAY,
         dim_color
 )
 
@@ -21,10 +22,18 @@ from my_utils import (
 
 
 def show_graphs(qtile):
-    font_height = 0.06
+    font_height = 0.15
+    first_row_height = 0.45 - font_height
+    basic_width = 0.45
+    basic_unit = 0.01
+    text_background = dim_color(GRAY, 5) + "C0"
+    graph_color = dim_color(SECONDARY_COLOR, 1.0) + "E0"
+    fill_color = dim_color(FOCUS_COLOR, 2) + "C0"
     text_kwargs = {
-            "height": font_height,
+            "height": font_height - 0.4 * font_height,
             "fontsize": 16,
+            "h_align": "center",
+            "background": text_background,
             "font": "Adwaita Sans Semi-Bold"
     }
     graph_options = {
@@ -32,8 +41,8 @@ def show_graphs(qtile):
         "line_width": 5,
         "border_width": 0,
         "frequency": 0.1,
-        "graph_color": SECONDARY_COLOR,
-        "fill_color": dim_color(FOCUS_COLOR, 2),
+        "graph_color": graph_color,
+        "fill_color": fill_color,
         "margin_y": 8,
         "margin_x": 6,
         "samples": 400,
@@ -50,7 +59,7 @@ def show_graphs(qtile):
         PopupText(
             name="CPU_Label",
             text="CPU Graph:",
-            width=0.45,
+            width=basic_width - basic_unit,
             #height=font_height,
             pos_x = 0.05,
             pos_y = 0.05,
@@ -58,16 +67,16 @@ def show_graphs(qtile):
             ),
         PopupWidget(
             widget=widget.CPUGraph(**graph_options),
-            width=0.45 - 0.01,
-            height=0.45 - font_height,
+            width = basic_width - 0.01,
+            height=first_row_height,
             pos_x = 0.05,
-            pos_y = 0.1,
+            pos_y = font_height + basic_unit,
             #**graph_options
             ),
         PopupText(
             name="NetGraph_Label",
             text="Network Graph:",
-            width = 0.45,
+            width = basic_width,
             # height = font_height,
             pos_x = 0.5,
             pos_y = 0.05,
@@ -75,27 +84,27 @@ def show_graphs(qtile):
             ),
         PopupWidget(
             widget = widget.NetGraph(**graph_options),
-            width=0.45,
-            height=0.45 - font_height,
+            width = basic_width,
+            height=first_row_height,
             pos_x = 0.5,
-            pos_y = 0.1,
+            pos_y = font_height + basic_unit,
             #**graph_options
             ),
         PopupText(
             name="MemoryGraph_Label",
             text="Memory Graph:",
-            width=0.9,
+            width=2 * basic_width,
             #height=font_height,
             pos_x=0.05,
-            pos_y=0.45 + font_height,
+            pos_y= first_row_height + font_height + 2 * basic_unit,
             **text_kwargs
             ),
         PopupWidget(
             widget = widget.MemoryGraph(**graph_options),
-            width=0.9,
-            height=0.45 - font_height,
+            width= 2 * basic_width,
+            height= first_row_height,
             pos_x = 0.05,
-            pos_y = 0.5 + font_height,
+            pos_y = first_row_height + 2 * (font_height - basic_unit),
             #**graph_options
             ),
         ]
