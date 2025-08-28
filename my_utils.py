@@ -29,6 +29,7 @@ POWER_MENU = "~/.config/qtile/scripts/powermenu"
 SHIFT = "shift"
 CONTROL = "control"
 SPACE = "space"
+LOCK_SCREEN = "~/.config/qtile/lock.py"
 
 
 
