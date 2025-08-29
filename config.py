@@ -124,7 +124,7 @@ layouts = [
 
 widget_defaults = dict(
     font="Adwaita Sans SemiBold",
-    fontsize=18,
+    fontsize=19,
     padding=0,
 )
 extension_defaults = widget_defaults.copy()
