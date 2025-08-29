@@ -5,9 +5,12 @@ logger.warning("your message")
 
 
 try:
-    from libqtile.widget import PulseVolume
+    from qtile_extras import widget
 
-    PulseVolume()
+    widget.GlobalMenu(
+            background="#111111"
+            )
 
+    logger.warning("No error occured")
 except Exception:
     logger.exception("Oh oh")
