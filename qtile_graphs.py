@@ -8,11 +8,14 @@ from qtile_extras.widget.decorations import (
         RectDecoration
 )
 from my_utils import (
-        SECONDARY_COLOR,
-        FOCUS_COLOR,
         GRAY,
+        DARK,
+        FOCUS_COLOR,
+        SECONDARY_COLOR,
+        NEUTRAL,
+        MEDIUM2,
         dim_color
-)
+        )
 
 #from constants import (
 #        FOCUS_COLOR,
@@ -26,9 +29,9 @@ def show_graphs(qtile):
     first_row_height = 0.45 - font_height
     basic_width = 0.45
     basic_unit = 0.01
-    text_background = dim_color(GRAY, 5) + "C0"
-    graph_color = dim_color(SECONDARY_COLOR, 1.0) + "E0"
-    fill_color = dim_color(FOCUS_COLOR, 2) + "C0"
+    text_background = dim_color(GRAY, DARK) + "C0"
+    graph_color = dim_color(SECONDARY_COLOR, NEUTRAL) + "E0"
+    fill_color = dim_color(FOCUS_COLOR, MEDIUM2) + "C0"
     text_kwargs = {
             "height": font_height - 0.4 * font_height,
             "fontsize": 16,
