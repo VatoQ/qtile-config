@@ -2,12 +2,16 @@
 This is a collection of constants for the qtile config
 """
 import os
+import re
 from qtile_extras.widget.decorations import (
     PowerLineDecoration,
     RectDecoration
 )
 from qtile_extras.layout.decorations import GradientBorder
 from qtile_extras.widget.groupbox2 import GroupBoxRule
+from libqtile.log_utils import logger
+import json
+from libqtile import bar, layout, qtile
 
 ###################
 #### WALLPAPER ####
@@ -19,9 +23,21 @@ WALLPAPERS_PATH = os.path.expanduser("~/Pictures/Wallpapers/")
 TIMER_MINUTES = 30
 
 
-######################################
-#### COMMON PROGRAMS AND BINDINGS ####
-######################################
+################################
+#### COMMON CONSTANT VALUES ####
+################################
+
+launcher = ""
+file_manager = ""
+
+if qtile.core.name == "x11":
+    term = "urxvt"
+    launcher = "rofi -show drun"
+    file_manager = "pcmanfm"
+elif qtile.core.name == "wayland":
+    term = "foot"
+    launcher = "wofi --show drun"
+    file_manager = "dolphin"
 
 MOD = "mod4"
 TERMINAL = "kitty"
@@ -30,6 +46,9 @@ SHIFT = "shift"
 CONTROL = "control"
 SPACE = "space"
 LOCK_SCREEN = "~/.config/qtile/lock.py"
+BORDER_WIDTH = 4
+MIN_BORDER_WIDTH = BORDER_WIDTH
+MAX_BORDER_WIDTH = int(1.5 * BORDER_WIDTH)
 
 
 
@@ -41,18 +60,52 @@ LOCK_SCREEN = "~/.config/qtile/lock.py"
 # not really fitting, consider adding later: #EE28FF
 # not really fitting, consider adding later: #28FFEE
 # not really fitting, consider adding later: #28EEFF
-YELLOW =        "#FFEE28"
-ORANGE =        "#FFAA28"
-RED =           "#FF2828"
-MAGENTA =       "#FF28AA"
-PURPLE =        "#AA28FF"
-BLUE =          "#2828FF"
-CYAN =          "#28AAFF"
-LIGHT_GREEN =   "#28FFAA"
-GREEN =         "#28FF28"
-LIME =          "#AAFF28"
-GRAY =          "#A2A29A"
+_COLOR_SCHEME_PATH = "~/.config/qtile/color_scheme.jsonc"
 
+with open(os.path.expanduser(_COLOR_SCHEME_PATH), encoding="utf-8") as color_scheme_json:
+    json_data:dict[str,str] = json.load(color_scheme_json)
+
+def match_color_hexcode(color:str) -> bool:
+    x = re.fullmatch("#([0-9a-fA-F]{6})",color)
+    return bool(x)
+
+failed_colors:list[str] = []
+
+for key, value in json_data.items():
+    if not match_color_hexcode(value):
+        message = f"Value {value} is not a full rgb hexcode. Only the format `#RRGGBB` is allowed in color_scheme.jsonc"
+        #print(message)
+        logger.warning(message)
+        failed_colors.append(key)
+        # _ = json_data.pop(key)
+
+for key in failed_colors:
+    _ = json_data.pop(key)
+
+# Fallback colorscheme:
+# YELLOW =        "#FFEE28"
+# ORANGE =        "#FFAA28"
+# RED =           "#FF2828"
+# MAGENTA =       "#FF28AA"
+# PURPLE =        "#AA28FF"
+# BLUE =          "#2828FF"
+# CYAN =          "#28AAFF"
+# LIGHT_GREEN =   "#28FFAA"
+# GREEN =         "#28FF28"
+# LIME =          "#AAFF28"
+# GRAY =          "#A2A29A"
+
+YELLOW       = json_data.get("yellow", "#FFEE28")
+ORANGE       = json_data.get("orange", "#FFAA28")
+RED          = json_data.get("red", "#FF2828")
+MAGENTA      = json_data.get("magenta", "#FF28AA")
+PURPLE       = json_data.get("purple", "#AA28FF")
+BLUE         = json_data.get("blue", "#2828FF")
+CYAN         = json_data.get("cyan", "#28AAFF")
+LIGHT_GREEN  = json_data.get("light_green", "#28FFAA")
+GREEN        = json_data.get("green", "#28FF28")
+LIME         = json_data.get("lime", "#AAFF28")
+GRAY         = json_data.get("gray", "#A2A29A")
 
 _A = 0.0244048
 _B = -0.219048
@@ -62,19 +115,23 @@ _D = 0.5
 def _interpolating_polynomial(x:float) -> float:
     return _A * x ** 3 + _B * x ** 2 + _C * x + _D
 
-# quotients = [
-#         0.5,    # LIGHT
-#         1,      # NEUTRAL
-#         1.3,    # DIMMED
-#         1.5,    # DIMMED2
-#         1.8,    # MEDIUM
-#         2,      # MEDIUM2
-#         2.5,    # DARKER
-#         3,      # DARKER2
-#         4,      # DARK
-#         6.8     # DARK2
-#         ]
+"""
+Original intuitive basis for the interpolation function.
+quotients = [
+        0.5,    # LIGHT
+        1,      # NEUTRAL
+        1.3,    # DIMMED
+        1.5,    # DIMMED2
+        1.8,    # MEDIUM
+        2,      # MEDIUM2
+        2.5,    # DARKER
+        3,      # DARKER2
+        4,      # DARK
+        6.8     # DARK2
+        ]
+"""
 
+# Quotients to be used in dim_color() and dim_color_alpha()
 LIGHT       = _interpolating_polynomial(0)
 NEUTRAL     = _interpolating_polynomial(1)
 DIMMED      = _interpolating_polynomial(2)
@@ -93,8 +150,33 @@ def dim_color(color:str, quotient:float) -> str:
     dim a given color hex code by a given factor.
 
     :param color: hexcode of a color. format: `#XXXXXX`
+    ## list of reccomended constants:
+        - YELLOW
+        - ORANGE
+        - RED
+        - MAGENTA
+        - PURPLE
+        - BLUE
+        - CYAN
+        - LIGHT_GREEN
+        - GREEN
+        - LIME
+        - GRAY
+
     :param factor: positive real number, where 1.0 does 
     nothing and the larger it is, the darker the color gets.
+    ## list of reccomended constants:
+        - LIGHT
+        - NEUTRAL
+        - DIMMED
+        - DIMMED2
+        - MEDIUM
+        - MEDIUM2
+        - DARKER
+        - DARKER2
+        - DARK
+        - DARK2
+
     :return: the dimmed color in the format `#XXXXXX`
     """
     r = int(color[1:3], 16)
@@ -117,8 +199,31 @@ def dim_color_alpha(color:str, quotient:float, alpha:str) -> str:
     darker the color.
 
     :param color: hexcode of a color. format: `#XXXXXX`
+    ## list of reccomended constants:
+        - YELLOW
+        - ORANGE
+        - RED
+        - MAGENTA
+        - PURPLE
+        - BLUE
+        - CYAN
+        - LIGHT_GREEN
+        - GREEN
+        - LIME
+        - GRAY
     :param quotient: positive real number, where 1.0 does 
     nothing and the larger it is, the darker the color gets.
+    ## list of reccomended constants:
+        - LIGHT
+        - NEUTRAL
+        - DIMMED
+        - DIMMED2
+        - MEDIUM
+        - MEDIUM2
+        - DARKER
+        - DARKER2
+        - DARK
+        - DARK2
     :param alpha: alpha channel. Format: `XX` (hexadecimal)
     :return: the dimmed color in the format `#XXXXXXXX`
     """
@@ -171,12 +276,13 @@ def get_decoration_group(choice: int):
             RectDecoration(
                 use_widget_background=True,
                 padding_y=5,
+                #padding_x=40,
                 filled=True,
                 radius=3,
             ),
             PowerLineDecoration(path="rounded_right", padding_y=0),
         ]
-        result["padding"] = 15
+        result["padding"] = 17
 
     return result
 
@@ -197,9 +303,9 @@ def set_label(rule, box) -> bool:
     return True
 
 GROUPBOX_RULES = [
-    GroupBoxRule(text_colour=dim_color(YELLOW, 1.4)).when(screen=GroupBoxRule.SCREEN_THIS),
-    GroupBoxRule(text_colour=dim_color(CYAN, 1.4)).when(occupied=True),
-    GroupBoxRule(text_colour=dim_color(CYAN, 2.7)).when(occupied=False),
+    GroupBoxRule(text_colour=dim_color(YELLOW, DIMMED)).when(screen=GroupBoxRule.SCREEN_THIS),
+    GroupBoxRule(text_colour=dim_color(CYAN, DIMMED)).when(occupied=True),
+    GroupBoxRule(text_colour=dim_color(CYAN, DARKER)).when(occupied=False),
     GroupBoxRule().when(func=set_label)
 ]
 
@@ -223,7 +329,7 @@ def init_layout_theme():
     """
     return {
         "margin": 5,
-        "border_width": 4,
+        "border_width": BORDER_WIDTH,
         "border_focus": _gradient_border,
         "border_normal": NORMAL_COLORS,
         "border_on_single": True,
@@ -232,6 +338,5 @@ def init_layout_theme():
         "fair": True,
         "decorations": [_gradient_border],
     }
-
 
 
