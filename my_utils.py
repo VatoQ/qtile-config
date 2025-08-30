@@ -1,5 +1,5 @@
 """
-This is a collection of constants for the qtile config
+This is a collection of constants for the qtile config.
 """
 import os
 import re
@@ -83,29 +83,29 @@ for key in failed_colors:
     _ = json_data.pop(key)
 
 # Fallback colorscheme:
-# YELLOW =        "#FFEE28"
-# ORANGE =        "#FFAA28"
-# RED =           "#FF2828"
-# MAGENTA =       "#FF28AA"
-# PURPLE =        "#AA28FF"
-# BLUE =          "#2828FF"
-# CYAN =          "#28AAFF"
-# LIGHT_GREEN =   "#28FFAA"
-# GREEN =         "#28FF28"
-# LIME =          "#AAFF28"
-# GRAY =          "#A2A29A"
+_YELLOW =        "#FFEE28"
+_ORANGE =        "#FFAA28"
+_RED =           "#FF2828"
+_MAGENTA =       "#FF28AA"
+_PURPLE =        "#AA28FF"
+_BLUE =          "#2828FF"
+_CYAN =          "#28AAFF"
+_LIGHT_GREEN =   "#28FFAA"
+_GREEN =         "#28FF28"
+_LIME =          "#AAFF28"
+_GRAY =          "#A2A29A"
 
-YELLOW       = json_data.get("yellow", "#FFEE28")
-ORANGE       = json_data.get("orange", "#FFAA28")
-RED          = json_data.get("red", "#FF2828")
-MAGENTA      = json_data.get("magenta", "#FF28AA")
-PURPLE       = json_data.get("purple", "#AA28FF")
-BLUE         = json_data.get("blue", "#2828FF")
-CYAN         = json_data.get("cyan", "#28AAFF")
-LIGHT_GREEN  = json_data.get("light_green", "#28FFAA")
-GREEN        = json_data.get("green", "#28FF28")
-LIME         = json_data.get("lime", "#AAFF28")
-GRAY         = json_data.get("gray", "#A2A29A")
+YELLOW       = json_data.get("yellow", _YELLOW)
+ORANGE       = json_data.get("orange", _ORANGE)
+RED          = json_data.get("red", _RED)
+MAGENTA      = json_data.get("magenta", _MAGENTA)
+PURPLE       = json_data.get("purple", _PURPLE)
+BLUE         = json_data.get("blue", _BLUE)
+CYAN         = json_data.get("cyan", _CYAN)
+LIGHT_GREEN  = json_data.get("light_green", _LIGHT_GREEN)
+GREEN        = json_data.get("green", _GREEN)
+LIME         = json_data.get("lime", _LIME)
+GRAY         = json_data.get("gray", _GRAY)
 
 _A = 0.0244048
 _B = -0.219048
@@ -142,6 +142,32 @@ DARKER      = _interpolating_polynomial(6)
 DARKER2     = _interpolating_polynomial(7)
 DARK        = _interpolating_polynomial(8)
 DARK2       = _interpolating_polynomial(9)
+
+_M_ALPHA = 13.0
+_B_ALPHA = 173.0
+
+def _alpha_interpolation(x:float) -> float:
+    if x == 0.0:
+        return 0.0
+    return _M_ALPHA * x + _B_ALPHA
+
+"""
+
+        0x00,
+        0xBB
+        0xC0,
+        0xCC,
+        0xE0,
+        0xEE,
+
+"""
+TRANSPARENT  = "00"
+TRANSLUCENT0 = "22"
+TRANSLUCENT1 = hex(int(_alpha_interpolation(1)))[2:]
+TRANSLUCENT2 = hex(int(_alpha_interpolation(2)))[2:]
+TRANSLUCENT3 = hex(int(_alpha_interpolation(3)))[2:]
+TRANSLUCENT4 = hex(int(_alpha_interpolation(4)))[2:]
+TRANSLUCENT5 = hex(int(_alpha_interpolation(5)))[2:]
 
 
 

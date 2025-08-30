@@ -14,14 +14,11 @@ from my_utils import (
         SECONDARY_COLOR,
         NEUTRAL,
         MEDIUM2,
-        dim_color
+        TRANSLUCENT2,
+        TRANSLUCENT4,
+        dim_color_alpha
         )
 
-#from constants import (
-#        FOCUS_COLOR,
-#        SECONDARY_COLOR,
-#        dim_color
-#)
 
 
 def show_graphs(qtile):
@@ -29,9 +26,9 @@ def show_graphs(qtile):
     first_row_height = 0.45 - font_height
     basic_width = 0.45
     basic_unit = 0.01
-    text_background = dim_color(GRAY, DARK) + "C0"
-    graph_color = dim_color(SECONDARY_COLOR, NEUTRAL) + "E0"
-    fill_color = dim_color(FOCUS_COLOR, MEDIUM2) + "C0"
+    text_background = dim_color_alpha(GRAY, DARK, TRANSLUCENT2)
+    graph_color = dim_color_alpha(SECONDARY_COLOR, NEUTRAL, TRANSLUCENT4)
+    fill_color = dim_color_alpha(FOCUS_COLOR, MEDIUM2, TRANSLUCENT2)
     text_kwargs = {
             "height": font_height - 0.4 * font_height,
             "fontsize": 16,
@@ -113,8 +110,6 @@ def show_graphs(qtile):
         ]
     layout = PopupRelativeLayout(
             qtile,
-            #rows=4,
-            #cols=4,
             width = 1000,
             height = 500,
             controls=controls,
