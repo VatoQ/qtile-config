@@ -36,7 +36,7 @@ command = [
     f"--insidewrong-color={CLEAR}",
     f"--ringwrong-color={WRONG}",
 
-    f"--inside-color={BLANK}",
+    f"--inside-color={CLEAR}",
     f"--ring-color={DEFAULT}",
     f"--line-color={BLANK}",
     f"--separator-color={DEFAULT}",
