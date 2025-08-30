@@ -143,6 +143,32 @@ DARKER2     = _interpolating_polynomial(7)
 DARK        = _interpolating_polynomial(8)
 DARK2       = _interpolating_polynomial(9)
 
+_M_ALPHA = 13.0
+_B_ALPHA = 173.0
+
+def _alpha_interpolation(x:float) -> float:
+    if x == 0.0:
+        return 0.0
+    return _M_ALPHA * x + _B_ALPHA
+
+"""
+
+        0x00,
+        0xBB
+        0xC0,
+        0xCC,
+        0xE0,
+        0xEE,
+
+"""
+TRANSPARENT  = "00"
+TRANSLUCENT0 = "22"
+TRANSLUCENT1 = hex(int(_alpha_interpolation(1)))[2:]
+TRANSLUCENT2 = hex(int(_alpha_interpolation(2)))[2:]
+TRANSLUCENT3 = hex(int(_alpha_interpolation(3)))[2:]
+TRANSLUCENT4 = hex(int(_alpha_interpolation(4)))[2:]
+TRANSLUCENT5 = hex(int(_alpha_interpolation(5)))[2:]
+
 
 
 def dim_color(color:str, quotient:float) -> str:
