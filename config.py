@@ -28,7 +28,6 @@
 
 import os
 import subprocess
-#import copy
 from libqtile import (
         layout,
         qtile,
@@ -46,9 +45,6 @@ from libqtile.config import (
 from libqtile.lazy import lazy
 from qtile_extras.widget.decorations import GradientDecoration, PowerLineDecoration, RectDecoration
 from qtile_extras.layout.decorations.borders import GradientFrame
-#from qtile_extras import widget as extrawidgets
-#from clock_widget import extended_clock, ExtendedClock
-#import random_wallpaper
 import bar_layout
 from keybindings import get_keys
 from my_utils import (
@@ -132,11 +128,12 @@ layouts = [
     layout.Max(**layout_theme),
 ]
 
-widget_defaults = dict(
-    font="Adwaita Sans SemiBold",
-    fontsize=19,
-    padding=0,
-)
+widget_defaults = {
+    "font":"Adwaita Sans SemiBold",
+    "fontsize":19,
+    "padding":0,
+}
+
 extension_defaults = widget_defaults.copy()
 
 
@@ -215,6 +212,9 @@ sticky_windows = []
 
 @lazy.function
 def toggle_sticky_windows(qtile, window=None):
+    """
+    Toggle a window's stickyness status (true or false)
+    """
     if window is None:
         window = qtile.current_screen.group.current_window
     if window in sticky_windows:
@@ -225,20 +225,28 @@ def toggle_sticky_windows(qtile, window=None):
 
 
 @hook.subscribe.setgroup
-def move_sticky_windows():
+def move_sticky_windows() -> None:
+    """
+    If a group change happens, every sticky window gets moved to the new group.
+    """
     for window in sticky_windows:
         window.togroup()
-    return
 
 
 @hook.subscribe.client_killed
-def remove_sticky_windows(window):
+def remove_sticky_windows(window) -> None:
+    """
+    removes a given window from the list of sticky windows
+    """
     if window in sticky_windows:
         sticky_windows.remove(window)
 
 
 @hook.subscribe.client_managed
-def auto_sticky_windows(window):
+def auto_sticky_windows(window) -> None:
+    """
+    Marks certain windows as sticky windows on client_managed.
+    """
     info = window.info()
     if (
         info["wm_class"] == ["Toolkit", "firefox"]
@@ -248,7 +256,11 @@ def auto_sticky_windows(window):
 
 
 @hook.subscribe.startup_once
-def autostart():
+def autostart() -> None:
+    """
+    Launches script that autostarts certain processes based on the current
+    session type. (X11 or Wayland)
+    """
     if qtile.core.name == "x11":
         home = os.path.expanduser("~/.config/qtile/autostart.sh")
         subprocess.call(home)
@@ -256,7 +268,7 @@ def autostart():
         home = os.path.expanduser("~/.config/qtile/autostart_wayland.sh")
         subprocess.call(home)
 
-
+## Uncomment if wallpapers should be randomized
 # @hook.subscribe.startup_once
 # def start_random_wallpaper_timer():
 #     random_wallpaper.Timer(TIMER_MINUTES * 60, random_wallpaper.set_random_wallpaper)
