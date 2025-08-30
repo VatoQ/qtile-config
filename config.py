@@ -28,16 +28,26 @@
 
 import os
 import subprocess
-import copy
-from libqtile import bar, layout, qtile
-from libqtile.config import Click, Drag, Group, Key, Match, Screen
+#import copy
+from libqtile import (
+        layout,
+        qtile,
+        hook
+)
+from libqtile.backend.wayland.inputs import InputConfig
+from libqtile.config import (
+        Click,
+        Drag,
+        Group,
+        Key,
+        Match,
+        Screen
+)
 from libqtile.lazy import lazy
 from qtile_extras.widget.decorations import GradientDecoration, PowerLineDecoration, RectDecoration
-from libqtile import hook
-from qtile_extras import widget as extrawidgets
-#from clock_widget import extended_clock, ExtendedClock
-from libqtile.backend.wayland.inputs import InputConfig
 from qtile_extras.layout.decorations.borders import GradientFrame
+#from qtile_extras import widget as extrawidgets
+#from clock_widget import extended_clock, ExtendedClock
 #import random_wallpaper
 import bar_layout
 from keybindings import get_keys
