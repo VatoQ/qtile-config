@@ -143,8 +143,12 @@ def bar_layout() -> bar.Bar:
                 bar_height=25,
                 min_brightness=35,
                 device="/sys/class/backlight/amdgpu_bl1",
-                format="{percent:2.0%}",
+                format="󰃝 {percent:2.0%}",
+                #hide_when_unavailable=False,
+                mode="bar",
+                #popup_hide_timeout=60,
                 step=5,
+                timeout_interval=5,
                 **decorations_right
             ),
             extrawidgets.PulseVolume(
