@@ -50,6 +50,7 @@ from keybindings import get_keys
 from my_utils import (
         FOCUS_COLOR,
         MOD,
+        NORMAL_COLORS,
         SHIFT,
         init_layout_theme,
         MAX_BORDER_WIDTH,
@@ -188,6 +189,7 @@ floating_layout = layout.Floating(
     max_border_width=MAX_BORDER_WIDTH,
     border_width=MIN_BORDER_WIDTH,
     border_focus=FOCUS_COLOR,
+    border_normal=NORMAL_COLORS
 )
 auto_fullscreen = True
 focus_on_window_activation = "smart"
