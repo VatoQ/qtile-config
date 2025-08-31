@@ -1,4 +1,8 @@
 #!/bin/python
+"""
+This module launches i3lock-color with the colorscheme defined in
+this configuration.
+"""
 
 import subprocess
 from my_utils import (
@@ -6,6 +10,7 @@ from my_utils import (
         GRAY,
         RED,
         GREEN,
+        SECONDARY_COLOR,
         YELLOW,
         LIGHT,
         NEUTRAL,
@@ -21,10 +26,11 @@ from my_utils import (
 )
 
 BLANK       = dim_color_alpha(GRAY, DARK2, TRANSPARENT)
-CLEAR       = dim_color_alpha(GRAY, LIGHT, TRANSLUCENT0)
+CLEAR       = dim_color_alpha(SECONDARY_COLOR, LIGHT, TRANSLUCENT0)
 DEFAULT     = dim_color_alpha(FOCUS_COLOR, NEUTRAL, TRANSLUCENT3)
 TEXT        = dim_color_alpha(FOCUS_COLOR, DIMMED, TRANSLUCENT5)
 WRONG       = dim_color_alpha(RED, NEUTRAL, TRANSLUCENT1)
+INSIDE_WRONG= dim_color_alpha(RED, NEUTRAL, TRANSLUCENT0)
 NOT_WRONG   = dim_color_alpha(GREEN, NEUTRAL, TRANSLUCENT1)
 VERIFYING   = dim_color_alpha(YELLOW, DIMMED2, TRANSLUCENT1)
 
@@ -33,7 +39,7 @@ command = [
     f"--insidever-color={CLEAR}",
     f"--ringver-color={VERIFYING}",
 
-    f"--insidewrong-color={CLEAR}",
+    f"--insidewrong-color={INSIDE_WRONG}",
     f"--ringwrong-color={WRONG}",
 
     f"--inside-color={CLEAR}",
@@ -50,11 +56,11 @@ command = [
     f"--bshl-color={NOT_WRONG}",
 
     "--screen", "1",
-    "--blur", "5",
+    "--blur", "2",
     "--clock",
     "--indicator",
-    '--time-str="%H:%M:%S"',
-    '--date-str="%a, %d.%m.%y"',
+    '--time-str=%H:%M:%S',
+    '--date-str=%a, %d.%m.%y',
     "--keylayout", "1"
 ]
 

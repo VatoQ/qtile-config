@@ -8,6 +8,7 @@ from qtile_extras.widget.decorations import (
         RectDecoration
 )
 from my_utils import (
+        BORDER_RADIUS,
         GRAY,
         DARK,
         FOCUS_COLOR,
@@ -22,6 +23,9 @@ from my_utils import (
 
 
 def show_graphs(qtile):
+    """
+    Shows CPU, Network and Memory graph in a grid-like arrangement.
+    """
     font_height = 0.15
     first_row_height = 0.45 - font_height
     basic_width = 0.45
@@ -48,7 +52,7 @@ def show_graphs(qtile):
         "samples": 400,
         "decorations": [
             RectDecoration(
-                radius=15,
+                radius=BORDER_RADIUS,
                 line_colour=FOCUS_COLOR,
                 line_width=5,
                 #padding=-5
@@ -118,7 +122,7 @@ def show_graphs(qtile):
             close_on_click=True,
             decorations=[
                 RectDecoration(
-                    radius=10,
+                    radius=BORDER_RADIUS,
                     colour="FF0000",
                     )
                 ]

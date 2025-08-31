@@ -1,0 +1,65 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "$schema": {
+            "type": "string"
+        },
+        "yellow": {
+            "type": "string"
+        },
+        "orange": {
+            "type": "string"
+        },
+        "red": {
+            "type": "string"
+        },
+        "magenta": {
+            "type": "string"
+        },
+        "purple": {
+            "type": "string"
+        },
+        "blue": {
+            "type": "string"
+        },
+        "cyan": {
+            "type": "string"
+        },
+        "light_green": {
+            "type": "string"
+        },
+        "green": {
+            "type": "string"
+        },
+        "lime": {
+            "type": "string"
+        },
+        "gray": {
+            "type": "string"
+        },
+        "theme": {
+            "type": "string",
+            "enum": [
+                "sunset",
+                "ocean",
+                "forest"
+            ]
+        }
+    },
+    "required": [
+        "$schema",
+        "yellow",
+        "orange",
+        "red",
+        "magenta",
+        "purple",
+        "blue",
+        "cyan",
+        "light_green",
+        "green",
+        "lime",
+        "gray",
+        "theme"
+    ]
+}

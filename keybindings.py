@@ -17,6 +17,7 @@ from my_utils import (
     file_manager,
 )
 from qtile_graphs import show_graphs
+from powermenu import show_power_menu
 
 
 def get_keys() -> list[Key]:
@@ -84,7 +85,8 @@ def get_keys() -> list[Key]:
     Key(
         [MOD, SHIFT],
         "q",
-        lazy.spawn(os.path.expanduser(POWER_MENU)),
+        #lazy.spawn(os.path.expanduser(POWER_MENU)),
+        lazy.function(show_power_menu),
         desc="Spawn power menu",
         ),
     Key([MOD], "q",

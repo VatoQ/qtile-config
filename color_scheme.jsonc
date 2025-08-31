@@ -1,4 +1,5 @@
 {
+    "$schema": "./schemas/colors.schema.json",
     "yellow": "#FFEE28",
     "orange": "#FFAA28",
     "red": "#FF2828",
@@ -9,5 +10,6 @@
     "light_green": "#28FFAA",
     "green": "#28FF28",
     "lime": "#AAFF28",
-    "gray": "#A2A2A2"
+    "gray": "#A2A2A2",
+    "theme": "sunset"
 }

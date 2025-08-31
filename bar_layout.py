@@ -4,11 +4,9 @@ Contains `bar_layout()`, which returns a Bar object.
 
 import copy
 from qtile_extras import widget as extrawidgets
-from qtile_extras.widget.decorations import GradientDecoration, PowerLineDecoration, RectDecoration
+from qtile_extras.widget.decorations import RectDecoration
 from libqtile import bar
 from my_utils import (
-    FOCUS_COLOR,
-    SECONDARY_COLOR,
     BLUE,
     GRAY,
     CYAN,
@@ -54,10 +52,6 @@ def bar_layout() -> bar.Bar:
     wifi_decoration["padding"] = 8
 
     most_right_widget_deccoration = copy.deepcopy(decorations_right)
-    # most_right_widget_deccoration["decorations"][1] = PowerLineDecoration(
-    #         path="arrow_left",
-    #         padding_y=0
-    #         )
     most_right_widget_deccoration["decorations"] = [
             RectDecoration(
                 use_widget_background=True,
@@ -91,6 +85,15 @@ def bar_layout() -> bar.Bar:
                 wifi_arc=75,
                 **wifi_decoration,
                 ),
+            # extrawidgets.IWD(
+            #     background=dim_color(BLUE, DARK),
+            #     interface="wlp2s0",
+            #     show_image=True,
+            #     show_text=False,
+            #     internet_check_host="8.8.8.8",
+            #     internet_check_port=53,
+            #     **wifi_decoration
+            #     ),
             extrawidgets.Bluetooth(
                 background=dim_color(BLUE, DARK2),
                 fontsize=25,
@@ -160,8 +163,8 @@ def bar_layout() -> bar.Bar:
                     "",
                     "",
                     ],
-                background = dim_color(CYAN, DIMMED2), 
-                emoji=True, 
+                background = dim_color(CYAN, DIMMED2),
+                emoji=True,
                 **decorations_right
             ),
             extrawidgets.ScriptExit(
