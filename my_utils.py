@@ -3,6 +3,8 @@ This is a collection of constants for the qtile config.
 """
 import os
 import re
+import json
+
 from qtile_extras.widget.decorations import (
     PowerLineDecoration,
     RectDecoration
@@ -10,7 +12,6 @@ from qtile_extras.widget.decorations import (
 from qtile_extras.layout.decorations import GradientBorder
 from qtile_extras.widget.groupbox2 import GroupBoxRule
 from libqtile.log_utils import logger
-import json
 from libqtile import bar, layout, qtile
 
 ###################
@@ -49,6 +50,7 @@ LOCK_SCREEN = "~/.config/qtile/lock.py"
 BORDER_WIDTH = 4
 MIN_BORDER_WIDTH = BORDER_WIDTH
 MAX_BORDER_WIDTH = int(1.5 * BORDER_WIDTH)
+BORDER_RADIUS = 18
 
 
 
@@ -71,7 +73,24 @@ def match_color_hexcode(color:str) -> bool:
 
 failed_colors:list[str] = []
 
-for key, value in json_data.items():
+
+json_color_keys = [
+    "yellow",
+    "orange",
+    "red",
+    "magenta",
+    "purple",
+    "blue",
+    "cyan",
+    "light_green",
+    "green",
+    "lime",
+    "gray",
+]
+
+#for key, value in json_data.items():
+for key in json_color_keys:
+    value = json_data[key]
     if not match_color_hexcode(value):
         message = f"Value {value} is not a full rgb hexcode. Only the format `#RRGGBB` is allowed in color_scheme.jsonc"
         #print(message)
@@ -115,21 +134,19 @@ _D = 0.5
 def _interpolating_polynomial(x:float) -> float:
     return _A * x ** 3 + _B * x ** 2 + _C * x + _D
 
-"""
-Original intuitive basis for the interpolation function.
-quotients = [
-        0.5,    # LIGHT
-        1,      # NEUTRAL
-        1.3,    # DIMMED
-        1.5,    # DIMMED2
-        1.8,    # MEDIUM
-        2,      # MEDIUM2
-        2.5,    # DARKER
-        3,      # DARKER2
-        4,      # DARK
-        6.8     # DARK2
-        ]
-"""
+##Original intuitive basis for the interpolation function.
+# quotients = [
+#         0.5,    # LIGHT
+#         1,      # NEUTRAL
+#         1.3,    # DIMMED
+#         1.5,    # DIMMED2
+#         1.8,    # MEDIUM
+#         2,      # MEDIUM2
+#         2.5,    # DARKER
+#         3,      # DARKER2
+#         4,      # DARK
+#         6.8     # DARK2
+#         ]
 
 # Quotients to be used in dim_color() and dim_color_alpha()
 LIGHT       = _interpolating_polynomial(0)
@@ -151,19 +168,16 @@ def _alpha_interpolation(x:float) -> float:
         return 0.0
     return _M_ALPHA * x + _B_ALPHA
 
-"""
+# 0x00,
+# 0xBB
+# 0xC0,
+# 0xCC,
+# 0xE0,
+# 0xEE,
 
-        0x00,
-        0xBB
-        0xC0,
-        0xCC,
-        0xE0,
-        0xEE,
-
-"""
 TRANSPARENT  = "00"
 TRANSLUCENT0 = "22"
-TRANSLUCENT1 = hex(int(_alpha_interpolation(1)))[2:]
+TRANSLUCENT1 = "99" #hex(int(_alpha_interpolation(1)))[2:]
 TRANSLUCENT2 = hex(int(_alpha_interpolation(2)))[2:]
 TRANSLUCENT3 = hex(int(_alpha_interpolation(3)))[2:]
 TRANSLUCENT4 = hex(int(_alpha_interpolation(4)))[2:]
@@ -255,12 +269,30 @@ def dim_color_alpha(color:str, quotient:float, alpha:str) -> str:
     """
     return dim_color(color, quotient) + alpha
 
-FOCUS_COLOR = ORANGE
-SECONDARY_COLOR = YELLOW
-NORMAL_COLORS = dim_color(FOCUS_COLOR, quotient=1.5)
+
+_THEME = json_data.get("theme", "sunset")
+
+_focus_color = BLUE
+_secondary_color = GRAY
+
+if _THEME == "sunset":
+    _focus_color = ORANGE
+    _secondary_color = YELLOW
+elif _THEME == "ocean":
+    _focus_color = BLUE
+    _secondary_color = CYAN
+elif _THEME == "forest":
+    _focus_color = GREEN
+    _secondary_color = LIGHT_GREEN
+
+FOCUS_COLOR = _focus_color
+SECONDARY_COLOR = _secondary_color
+
+NORMAL_COLORS = dim_color(FOCUS_COLOR, quotient=DIMMED2)
 POINT1 = (0, 0)
 POINT2 = (0, 1)
 
+logger.info(f"Colortheme:\n\tPrimary: {FOCUS_COLOR}\n\tSecondary: {SECONDARY_COLOR}\n\tTertiary: {NORMAL_COLORS}")
 
 ########################
 #### BAR DECORATION ####
