@@ -25,14 +25,13 @@ from my_utils import (
     SECONDARY_COLOR,
     TRANSLUCENT0,
     TRANSLUCENT1,
-    TRANSLUCENT2,
-    TRANSLUCENT3,
-    TRANSLUCENT4,
-    TRANSLUCENT5,
     dim_color_alpha
 )
 
-def show_power_menu(qtile):
+def show_power_menu(qtile) -> None:
+    """
+    Renders an array of logout options. Can be cycled with vim keys.
+    """
     image_options = {
             "row_span": 1,
             "col_span": 1,
@@ -88,7 +87,7 @@ def show_power_menu(qtile):
                 row=0,
                 col=3,
                 mouse_callbacks = {
-                    "Button1": lazy.shutdown()
+                    "Button1": lazy.spawn("systemctl poweroff")
                     },
                 **shutdown_options,
                 ),
