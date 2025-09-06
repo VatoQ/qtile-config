@@ -11,7 +11,6 @@ from my_utils import (
     SHIFT,
     CONTROL,
     TERMINAL,
-    POWER_MENU,
     LOCK_SCREEN,
     launcher,
     file_manager,

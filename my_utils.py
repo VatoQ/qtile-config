@@ -88,7 +88,6 @@ json_color_keys = [
     "gray",
 ]
 
-#for key, value in json_data.items():
 for key in json_color_keys:
     value = json_data[key]
     if not match_color_hexcode(value):
