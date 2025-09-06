@@ -5,7 +5,7 @@ Contains `bar_layout()`, which returns a Bar object.
 import copy
 from qtile_extras import widget as extrawidgets
 from qtile_extras.widget.decorations import RectDecoration
-from libqtile import bar
+from libqtile import bar, lazy
 from my_utils import (
     BLUE,
     GRAY,
@@ -26,6 +26,7 @@ from my_utils import (
     BAR_CHOICE_LEFT,
     BAR_CHOICE_RIGHT,
 )
+from powermenu import show_power_menu
 
 def bar_layout() -> bar.Bar:
     """
@@ -85,15 +86,6 @@ def bar_layout() -> bar.Bar:
                 wifi_arc=75,
                 **wifi_decoration,
                 ),
-            # extrawidgets.IWD(
-            #     background=dim_color(BLUE, DARK),
-            #     interface="wlp2s0",
-            #     show_image=True,
-            #     show_text=False,
-            #     internet_check_host="8.8.8.8",
-            #     internet_check_port=53,
-            #     **wifi_decoration
-            #     ),
             extrawidgets.Bluetooth(
                 background=dim_color(BLUE, DARK2),
                 fontsize=25,
@@ -147,9 +139,7 @@ def bar_layout() -> bar.Bar:
                 min_brightness=35,
                 device="/sys/class/backlight/amdgpu_bl1",
                 format="󰃝 {percent:2.0%}",
-                #hide_when_unavailable=False,
                 mode="bar",
-                #popup_hide_timeout=60,
                 step=5,
                 timeout_interval=5,
                 **decorations_right
@@ -167,14 +157,17 @@ def bar_layout() -> bar.Bar:
                 emoji=True,
                 **decorations_right
             ),
-            extrawidgets.ScriptExit(
-                background=dim_color(RED, NEUTRAL),
-                default_text="󰅙",
-                countdown_format="{}",
-                countdown_start=5,
+            extrawidgets.Image(
+                background=dim_color(RED, DIMMED2),
+                colour=dim_color(RED, LIGHT / 1.8),
+                filename="~/Pictures/Icons/qtile/bar/logout.png",
+                mask=True,
+                margin_y=3,
+                mouse_callbacks= {
+                    "Button1": lazy.lazy.function(show_power_menu),
+                    },
                 **most_right_widget_deccoration,
             ),
-            # extended_clock,
         ],
         41,
         # radius=10,
