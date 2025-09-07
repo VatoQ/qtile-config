@@ -1,10 +1,18 @@
 """
 This is a collection of constants for the qtile config.
 """
+# pyright: reportUnknownVariableType=false
+# pyright: reportAny=false
+# pyright: reportUnknownParameterType=false
+# pyright: reportUnknownArgumentType=false
+# pyright: reportMissingParameterType=false
+# pyright: reportUntypedFunctionDecorator=false
+# pyright: reportUnknownMemberType=false
 import os
 import re
 import json
 
+from libqtile.utils import send_notification
 from qtile_extras.widget.decorations import (
     PowerLineDecoration,
     RectDecoration
@@ -12,7 +20,7 @@ from qtile_extras.widget.decorations import (
 from qtile_extras.layout.decorations import GradientBorder
 from qtile_extras.widget.groupbox2 import GroupBoxRule
 from libqtile.log_utils import logger
-from libqtile import bar, layout, qtile
+from libqtile import qtile
 
 ###################
 #### WALLPAPER ####
@@ -313,7 +321,7 @@ def get_decoration_group(choice: int):
             )
         ]
 
-        result["padding"] = 20
+        result["padding"] = 15
 
     elif choice == BAR_CHOICE_LEFT:
         result["decorations"] = [
@@ -339,31 +347,67 @@ def get_decoration_group(choice: int):
             ),
             PowerLineDecoration(path="rounded_right", padding_y=0),
         ]
-        result["padding"] = 17
+        result["padding"] = 15
 
     return result
 
 
-def set_label(rule, box) -> bool:
+_SPECIAL_LABELS = {
+        "term": "",
+        "fox": "󰈹",
+        "steam": "",
+        }
+
+_SL_VALS = [value for key, value in _SPECIAL_LABELS.items()]
+
+def _set_label(rule, box) -> bool:
     """
     Sets labels to group icons in GroupBox2
 
     :return: True
     """
-    if box.focused:
+    if box.focused and rule.text not in _SL_VALS:
         rule.text = "◉"
-    elif box.occupied:
+    elif box.occupied and rule.text not in _SL_VALS:
         rule.text = "◎"
     else:
         rule.text = "○"
 
     return True
 
+def _has_window_class(name, rule, box) -> bool:
+    for win in box.group.windows:
+        win_info = win.info()
+        win_class = win_info["wm_class"]
+
+        # send_notification(
+        #         "qtile",
+        #         f"looking at window {win_class}"
+        #         )
+
+        if name in win_class:
+            return True
+
+    return False
+
+
+def _has_terminal(rule, box) -> bool:
+    return _has_window_class("kitty", rule, box)
+
+def _has_firefox(rule, box) -> bool:
+    return _has_window_class("firefox", rule, box)
+
+def _has_steam(rule, box) -> bool:
+    return _has_window_class("steam", rule, box)
+
 GROUPBOX_RULES = [
-    GroupBoxRule(text_colour=dim_color(YELLOW, DIMMED)).when(screen=GroupBoxRule.SCREEN_THIS),
-    GroupBoxRule(text_colour=dim_color(CYAN, DIMMED)).when(occupied=True),
-    GroupBoxRule(text_colour=dim_color(CYAN, DARKER)).when(occupied=False),
-    GroupBoxRule().when(func=set_label)
+    GroupBoxRule(text_colour=dim_color(FOCUS_COLOR, NEUTRAL)).when(screen=GroupBoxRule.SCREEN_THIS),
+    GroupBoxRule(text_colour=dim_color(FOCUS_COLOR, DIMMED2)).when(occupied=True),
+    GroupBoxRule(text_colour=dim_color(SECONDARY_COLOR, DARK)).when(occupied=False),
+    GroupBoxRule(text=_SPECIAL_LABELS["fox"]).when(func=_has_firefox),
+    GroupBoxRule(text=_SPECIAL_LABELS["steam"]).when(func=_has_steam),
+    GroupBoxRule(text=_SPECIAL_LABELS["term"]).when(func=_has_terminal),
+    GroupBoxRule().when(func=_set_label),
 ]
 
 ################
@@ -395,5 +439,3 @@ def init_layout_theme():
         "fair": True,
         "decorations": [_gradient_border],
     }
-
-
