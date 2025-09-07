@@ -26,6 +26,14 @@
 # SOFTWARE.
 """
 
+# pyright: reportUnknownVariableType=false
+# pyright: reportAny=false
+# pyright: reportUnknownParameterType=false
+# pyright: reportUnknownArgumentType=false
+# pyright: reportMissingParameterType=false
+# pyright: reportUntypedFunctionDecorator=false
+# pyright: reportUnknownMemberType=false
+
 import os
 import subprocess
 from libqtile import (
@@ -48,10 +56,20 @@ from qtile_extras.layout.decorations.borders import GradientFrame
 import bar_layout
 from keybindings import get_keys
 from my_utils import (
+        BORDER_WIDTH,
+        DARK,
+        # DARKER,
+        DARKER2,
+        DIMMED2,
         FOCUS_COLOR,
+        GRAY,
+        LIGHT,
         MOD,
         NORMAL_COLORS,
+        RED,
+        SECONDARY_COLOR,
         SHIFT,
+        dim_color,
         init_layout_theme,
         MAX_BORDER_WIDTH,
         MIN_BORDER_WIDTH,
@@ -107,32 +125,37 @@ layout_theme = init_layout_theme()
 
 layouts = [
     # layout.Columns(border_focus_stack=[FOCUS_COLOR, SECONDARY_COLOR], border_width=4),
-    # layout.Max(),
     # Try more layouts by unleashing below layouts.
-    # layout.Stack(num_stacks=2),
-    # layout.Bsp(),
-    # layout.Matrix(),
-    # layout.MonadTall(),
-    # layout.MonadWide(),
-    # layout.RatioTile(),
-    # layout.Tile(),
-    # layout.TreeTab(),
-    # layout.VerticalTile(),
-    # layout.Zoomy(),
+    #layout.Tile(**layout_theme),
+
     layout.Bsp(**layout_theme),
-    # layout.Matrix(**layout_theme),
-    # layout.Spiral(**layout_theme),
-    # layout.Columns(**layout_theme),
-    # layout.Matrix(**layout_theme),
-    # layout.Floating(**layout_theme),
-    # layout.RatioTile(**layout_theme),
-    layout.Max(**layout_theme),
+    # layout.Matrix(**layout_theme), # Consider adding
+    # layout.MonadTall(**layout_theme), # Consider adding
+    layout.TreeTab(
+        section_fg=dim_color(FOCUS_COLOR, LIGHT),
+        active_bg=dim_color(FOCUS_COLOR, DIMMED2),
+        active_fg=dim_color(GRAY, LIGHT),
+        bg_color=dim_color(GRAY, DARK),
+        inactive_bg=dim_color(SECONDARY_COLOR, DARKER2),
+        urgent_bg=dim_color(RED, DARKER2),
+        urgent_fg=dim_color(GRAY, LIGHT),
+        fontsize=16,
+        fontshadow=dim_color(GRAY, DARK),
+        section_fontsize=16,
+        margin_y=20,
+        section_left=10,
+        section_top=10,
+        vspace=BORDER_WIDTH,
+        sections=[
+            "Windows",
+            ],
+        **layout_theme),
 ]
 
 widget_defaults = {
     "font":"Adwaita Sans SemiBold",
     "fontsize":19,
-    "padding":0,
+    "padding":3,
 }
 
 extension_defaults = widget_defaults.copy()
@@ -265,10 +288,10 @@ def autostart() -> None:
     """
     if qtile.core.name == "x11":
         home = os.path.expanduser("~/.config/qtile/autostart.sh")
-        subprocess.call(home)
+        _ = subprocess.call(home)
     elif qtile.core.name == "wayland":
         home = os.path.expanduser("~/.config/qtile/autostart_wayland.sh")
-        subprocess.call(home)
+        _ = subprocess.call(home)
 
 ## Uncomment if wallpapers should be randomized
 # @hook.subscribe.startup_once
