@@ -8,17 +8,17 @@ from qtile_extras.widget.decorations import (
         RectDecoration
 )
 from my_utils import (
-        BORDER_RADIUS,
-        GRAY,
-        DARK,
-        FOCUS_COLOR,
-        SECONDARY_COLOR,
-        NEUTRAL,
-        MEDIUM2,
-        TRANSLUCENT2,
-        TRANSLUCENT4,
-        dim_color_alpha
-        )
+    BORDER_RADIUS,
+    GRAY,
+    DARK,
+    FOCUS_COLOR,
+    SECONDARY_COLOR,
+    NEUTRAL,
+    MEDIUM2,
+    TRANSLUCENT2,
+    TRANSLUCENT4,
+    dim_color_alpha
+)
 
 
 
