@@ -14,7 +14,9 @@ from qtile_extras import widget as extrawidgets
 from qtile_extras.widget.decorations import RectDecoration
 from libqtile import bar, lazy
 from my_utils import (
+    BAR_HEIGHT,
     BLUE,
+    BORDER_WIDTH,
     DIMMED,
     FOCUS_COLOR,
     GRAY,
@@ -36,6 +38,7 @@ from my_utils import (
     BAR_CHOICE_LEFT,
     BAR_CHOICE_RIGHT,
 )
+from show_outdated import show_outdated 
 from powermenu import show_power_menu
 
 def bar_layout() -> bar.Bar:
@@ -117,9 +120,9 @@ def bar_layout() -> bar.Bar:
             #     **decorations_right
             # ),
             extrawidgets.TaskList(
-                background=dim_color(GRAY, MEDIUM2),
-                border=dim_color(FOCUS_COLOR, NEUTRAL),
-                unfocused_border=dim_color(FOCUS_COLOR, DIMMED2),
+                background=dim_color(GRAY, DARKER),
+                border=dim_color(FOCUS_COLOR, DIMMED),
+                unfocused_border=dim_color(SECONDARY_COLOR, DARKER),
                 fontshadow=dim_color(GRAY, DARK),
                 scroll=True,
                 highlight_method="block",
@@ -127,6 +130,7 @@ def bar_layout() -> bar.Bar:
                 txt_floating="  ",
                 txt_maximized="  ",
                 txt_minimized="  ",
+                spacing=BORDER_WIDTH,
                 **tasklist_decorations
                 ),
             # extrawidgets.Spacer(
@@ -148,9 +152,12 @@ def bar_layout() -> bar.Bar:
                 ),
             extrawidgets.CheckUpdates(
                 background=dark_blue,
-                distro="Arch",
+                distro="Arch_checkupdates",
                 no_update_string="✅",
-                display_format="󰚰: {updates}",
+                display_format="󰚰  - {updates}",
+                mouse_callbacks = {
+                    "Button1": lazy.lazy.function(show_outdated)
+                },
                 **wifi_decoration,
                 ),
             extrawidgets.Systray(
@@ -230,7 +237,7 @@ def bar_layout() -> bar.Bar:
                 **most_right_widget_deccoration,
             ),
         ],
-        41,
+        BAR_HEIGHT,
         # radius=10,
         # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
         # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
