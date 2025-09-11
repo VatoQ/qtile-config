@@ -1,6 +1,7 @@
 #!/bin/python
 import os
 import copy
+from libqtile.core.manager import Qtile
 from libqtile.lazy import lazy
 from fileinput import filename
 from qtile_extras.popup import (
@@ -28,7 +29,7 @@ from my_utils import (
     dim_color_alpha
 )
 
-def show_power_menu(qtile) -> None:
+def show_power_menu(qtile: Qtile) -> None:
     """
     Renders an array of logout options. Can be cycled with vim keys.
     """
