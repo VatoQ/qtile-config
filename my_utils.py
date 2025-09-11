@@ -42,7 +42,7 @@ file_manager = ""
 if qtile.core.name == "x11":
     term = "urxvt"
     launcher = "rofi -show drun"
-    file_manager = "pcmanfm"
+    file_manager = "thunar"
 elif qtile.core.name == "wayland":
     term = "foot"
     launcher = "wofi --show drun"
@@ -59,6 +59,7 @@ BORDER_WIDTH = 4
 MIN_BORDER_WIDTH = BORDER_WIDTH
 MAX_BORDER_WIDTH = int(1.5 * BORDER_WIDTH)
 BORDER_RADIUS = 18
+BAR_HEIGHT = 41
 
 
 
